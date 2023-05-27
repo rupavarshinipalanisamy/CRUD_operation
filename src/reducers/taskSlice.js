@@ -1,4 +1,3 @@
-// reducers/taskSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const taskSlice = createSlice({
@@ -6,8 +5,9 @@ const taskSlice = createSlice({
   initialState: [],
   reducers: {
     addTask: (state, action) => {
+      
       state.push(action.payload);
-    },
+    },                                                                                                                                                                                                                                                                                                       
     deleteTask: (state, action) => {
       return state.filter((task) => task.id !== action.payload);
     },

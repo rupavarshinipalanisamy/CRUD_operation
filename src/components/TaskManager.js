@@ -1,66 +1,37 @@
-// components/TaskManager.js
 import React, { useState } from 'react';
 import { View, TextInput, Button, FlatList, Text,TouchableOpacity, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { addTask, deleteTask, updateTask } from '../reducers/taskSlice';
 
 const TaskManager = ({navigation}) => {
-  // const tasks = useSelector(state => state.tasks);
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
-  const [editingTask, setEditingTask] = useState(null);
-
-  const handleCreateTask = ({navigation}) => {
-    if (name.trim() !== '' && age.trim() !== '') {
+  
+const handleCreateTask = () => {
+    if (name.trim() !== '' && age.trim() !== '') { //textinput should not be empty
       const newTask = {
         id: Date.now().toString(),
         name: name.trim(),
         age: age.trim(),
       };
+  
       dispatch(addTask(newTask));
-      setName('');
+      setName(''); // after creating handle task to make an txtinput empty
       setAge('');
      
       
     }
   };
 
-  const handleDeleteTask = id => {
-    dispatch(deleteTask(id));
-  };
+  // const handleCreateTask = () => {
+  //   dispatch(addTask({id:Date.now.toString(),name,age}));
+  //   setName('');
+  //   setAge('');
+   
+  // };
 
-  const handleEditTask = task => {
-    setEditingTask(task);
-    setName(task.name);
-    setAge(task.age);
-  };
-
-  const handleUpdateTask = () => {
-    if (name.trim() !== '' && age.trim() !== '') {
-      const updatedTask = {
-        id: editingTask.id,
-        name: name.trim(),
-        age: age.trim(),
-      };
-      dispatch(updateTask(updatedTask));
-      setEditingTask(null);
-      setName('');
-      setAge('');
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTask(null);
-    setName('');
-    setAge('');
-  };
-
-  const handleReadTask = () => {
-    console.log(tasks);
-  };
-
-  return (
+ return (
     <View style={styles.container}>
       <TextInput
       style={styles.inp_1}
@@ -75,45 +46,17 @@ const TaskManager = ({navigation}) => {
         placeholder="Enter age"
         keyboardType="numeric"
       />
-      {editingTask ? (
-        <View>
-          <Button title="Update" onPress={handleUpdateTask} />
-          <Button title="Cancel" onPress={handleCancelEdit} />
-        </View>
-      ) : (
         <TouchableOpacity 
         style={styles.createbtn}
         onPress={handleCreateTask}>
           <Text>CREATE</Text>
         </TouchableOpacity> 
-      )}
+   
       <TouchableOpacity style={styles.createbtn}
       onPress={()=>{navigation.navigate('ListPage')}}
       >
         <Text>List</Text>
         </TouchableOpacity>
-
-      {/* <FlatList
-        data={tasks}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-        
-          <View style={styles.card}>
-            <Text>Name: {item.name}</Text>
-            <Text>Age: {item.age}</Text>
-            <TouchableOpacity   style={styles.deletebtn}
-    
-              onPress={() => handleDeleteTask(item.id)}>
-                <Text style={styles. deletetxt}>DELETE</Text>
-              </TouchableOpacity>
-               <TouchableOpacity      style={styles.editbtn} 
-               onPress={() => handleEditTask(item)} >
-                <Text style={styles. deletetxt}>EDIT</Text>
-                </TouchableOpacity>
-          </View>
-         
-        )}
-      /> */}
     </View>
   );
 };

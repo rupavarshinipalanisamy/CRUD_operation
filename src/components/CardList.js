@@ -5,6 +5,7 @@ import { addTask, deleteTask, updateTask } from '../reducers/taskSlice';
 
 
 const CardList = () => {
+  
     const tasks = useSelector(state => state.tasks);
     const dispatch = useDispatch();
 
@@ -22,40 +23,34 @@ const CardList = () => {
         setAge(task.age);
 
       };
-       const handleCreateTask = ({navigation}) => {
-    if (name.trim() !== '' && age.trim() !== '') {
-      const newTask = {
-        id: Date.now().toString(),
-        name: name.trim(),
-        age: age.trim(),
-      };
-      dispatch(addTask(newTask));
-      setName('');
-      setAge('');
-     
+ 
       
-    }
-  };
-      
-  const handleUpdateTask = () => {
-    if (name.trim() !== '' && age.trim() !== '') {
-      const updatedTask = {
-        id: editingTask.id,
-        name: name.trim(),
-        age: age.trim(),
+      const handleUpdateTask = () => {
+        if (editingTask && name.trim() !== '' && age.trim() !== '') {
+          const updatedTask = {
+            id: editingTask.id,
+            name: name.trim(),
+            age: age.trim(),
+          };
+          dispatch(updateTask(updatedTask));
+          setEditingTask(null);
+          setName('');
+          setAge('');
+        }
       };
-      dispatch(updateTask(updatedTask));
-      setEditingTask(null);
-      setName('');
-      setAge('');
-    }
-  };
+      
   return (
     <View style={styles.container}>
 
            {editingTask ? ( <View style={styles.card}>
-            <TextInput placeholder='name'></TextInput>
-            <TextInput placeholder='age'></TextInput>
+            <TextInput placeholder='name'
+            value={name}
+            onChangeText={setName}
+            ></TextInput>
+            <TextInput placeholder='age'
+             value={age}
+             onChangeText={setAge}
+            ></TextInput>
             <TouchableOpacity  onPress={handleUpdateTask}>
                 <Text style={styles.updatebtn}>Update</Text>
             </TouchableOpacity>
@@ -68,24 +63,20 @@ const CardList = () => {
       )}
         <FlatList
         data={tasks}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-        
+         keyExtractor={item => item.id}
+         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text>Name: {item.name}</Text>
             <Text>Age: {item.age}</Text>
-            <TouchableOpacity   style={styles.deletebtn}
-    
-              onPress={() => handleDeleteTask(item.id)}>
-                <Text style={styles. deletetxt}>DELETE</Text>
-              </TouchableOpacity>
-               <TouchableOpacity      style={styles.editbtn} 
-               onPress={() => handleEditTask(item)} >
-                <Text style={styles. deletetxt}>EDIT</Text>
-                </TouchableOpacity>
+            <TouchableOpacity style={styles.deletebtn} onPress={() => handleDeleteTask(item.id)}>
+              <Text style={styles.deletetxt}>DELETE</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.editbtn} onPress={() => handleEditTask(item)}>
+              <Text style={styles.deletetxt}>EDIT</Text>
+            </TouchableOpacity>
           </View>
-         
         )}
+        
       /> 
     </View>
   )
@@ -154,4 +145,3 @@ const styles= StyleSheet.create({
     }
 
   })
-  
